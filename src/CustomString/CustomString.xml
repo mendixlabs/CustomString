@@ -16,7 +16,13 @@
           <caption>Render value as HTML</caption>
           <category>Data source</category>
           <description>Escapes HTML elements when set to false</description>
-        </property>
+    </property>
+    <property key="mfToExecute" type="microflow" required="false" defaultValue="">
+          <caption>On click</caption>
+          <category>Behavior</category>
+          <description>The microflow to execute on click.</description>
+          <returnType type="Boolean" />
+    </property>
 	</properties>
 </widget>
 

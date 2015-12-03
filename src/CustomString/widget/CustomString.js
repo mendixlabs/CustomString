@@ -1,80 +1,143 @@
-(function() {
-	'use strict';
+/*
+    CustomString
+    ========================
 
-	dojo.provide('CustomString.widget.CustomString');
-		
-	dojo.declare('CustomString.widget.CustomString', [ mxui.widget._WidgetBase, dijit._TemplatedMixin ], {
+    @file      : CustomString.js
+    @version   : 2.0.0
+    @author    : Roeland Salij
+    @date      : Thursday, December 03, 2015
+    @copyright : Mendix 2015
+    @license   : Apache 2
 
-		templateString : '<div class="CustomString-container" dojoAttachPoint="customString"></div>',
+    Documentation
+    ========================
+    Describe your widget here.
+*/
 
-		_contextGuid			: null,
-		_contextObj				: null,
-		_objSub					: null,
-		 
-		// DOJO.WidgetBase -> PostCreate is fired after the properties of the widget are set.
-		postCreate: function() {
-			// Setup events
-			
-		},
+// Required module list. Remove unnecessary modules, you can always get them back from the boilerplate.
+define([
+    "dojo/_base/declare",
+    "mxui/widget/_WidgetBase",
+    "dijit/_TemplatedMixin",
+    "dojo/_base/array",
+    "dojo/_base/lang",
+    "dojo/text!CustomString/widget/template/CustomString.html"
+], function(declare, _WidgetBase, _TemplatedMixin, dojoArray, dojoLang, widgetTemplate) {
+    "use strict";
 
-		update : function (obj, callback) {
-			if(typeof obj === 'string'){
-				this._contextGuid = obj;
-				mx.data.get({
-					guids    : [obj],
-					callback : dojo.hitch(this, function (objArr) {
-						if (objArr.length === 1)
-							this._loadData(objArr[0],this.customString);
-						else
-							console.log('Could not find the object corresponding to the received object ID.')
-					})
-				});
-			} else if(obj === null){
-				// Sorry no data no show!
-				console.log('Whoops... the customString has no context object passed to it!');
-			} else {
-				// Attach to data refresh.
-				if (this._objSub)
-					this.unsubscribe(this._objSub);
+    // Declare widget's prototype.
+    return declare("CustomString.widget.CustomString", [ _WidgetBase, _TemplatedMixin ], {
+        // _TemplatedMixin will create our dom node using this HTML template.
+        templateString: widgetTemplate,
 
-				this._objSub = mx.data.subscribe({
-					guid : obj.getGuid(),
-					callback : dojo.hitch(this, this.update)
-				});
-				// Load data
-				this._loadData(obj,this.customString);
-			}
+        // Parameters configured in the Modeler.
+        sourceMF: "",
+        renderHTML: "",
 
-			if(typeof callback !== 'undefined') {
-				callback();
-			}
-		},
+        // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
+        _handles: null,
+        _contextObj: null,
+        _alertDiv: null,
 
-		_loadData : function (obj,divElement) {
-			mx.data.action({
+        // dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
+        constructor: function() {
+            this._handles = [];
+        },
+
+        // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
+        postCreate: function() {
+            this._setupEvents();
+        },
+
+        // mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
+        update: function(obj, callback) {
+            this._contextObj = obj;
+            
+            this._resetSubscriptions();
+            this._updateRendering();
+
+            callback();
+        },
+        
+         // Attach events to HTML dom elements
+        _setupEvents: function() {
+
+            this.connect(this.infoTextNode, "click", function(e) {
+                // Only on mobile stop event bubbling!
+                this._stopBubblingEventOnMobile(e);
+
+                // If a microflow has been set execute the microflow on a click.
+                if (this.mfToExecute !== "") {
+                    mx.data.action({
+                        params: {
+                            applyto: "selection",
+                            actionname: this.mfToExecute,
+                            guids: [ this._contextObj.getGuid() ]
+                        },
+						store: {
+							caller: this.mxform
+						},
+                        callback: function(obj) {
+                            //TODO what to do when all is ok!
+                        },
+                        error: dojoLang.hitch(this, function(error) {
+                            console.log(this.id + ": An error occurred while executing microflow: " + error.description);
+                        })
+                    }, this);
+                }
+            });
+        },
+        _updateRendering : function () {
+           mx.data.action({
 			    params       : {
 			        actionname : this.sourceMF,
 			        applyto     : "selection",
-			        guids       : [obj.getGuid()]
+			        guids       : [this._contextObj.getGuid()]
 
 			    },		
-			    callback     : dojo.hitch(this,function(returnedString) {
-			        // no MxObject expected
-			        divElement.innerHTML = this.checkString(returnedString, this.renderHTML);
+			    callback     : dojoLang.hitch(this,function(returnedString) {
+			        this.customString.innerHTML = this.checkString(returnedString, this.renderHTML);
 			    }),
-			    error        : dojo.hitch(this, function(error) {
+			    error        : dojoLang.hitch(this, function(error) {
 			        alert(error.description);
 			    }),
-			    onValidation : dojo.hitch(this, function(validations) {
-			        alert("There were " + validation.length + " validation errors");
+			    onValidation : dojoLang.hitch(this, function(validations) {
+			        alert("There were " + validations.length + " validation errors");
 			    })
 			});
 		},
 
-		checkString : function (string, htmlBool) {
+        checkString : function (string, htmlBool) {
         if(string.indexOf("<script") > -1 || !htmlBool)
             string = mxui.dom.escapeHTML(string);   
         return string;  
-    	}
-	});
-})();
+    	},
+
+        // Reset subscriptions.
+        _resetSubscriptions: function() {
+            // Release handles on previous object, if any.
+            if (this._handles) {
+                dojoArray.forEach(this._handles, function (handle) {
+                    mx.data.unsubscribe(handle);
+                });
+                this._handles = [];
+            }
+
+            // When a mendix object exists create subscribtions. 
+            if (this._contextObj) {
+                var objectHandle = this.subscribe({
+                    guid: this._contextObj.getGuid(),
+                    callback: dojoLang.hitch(this, function(guid) {
+                        this._updateRendering();
+                    })
+                });
+
+                this._handles = [ objectHandle];
+            }
+        }
+    });
+});
+
+require(["CustomString/widget/CustomString"], function() {
+    "use strict";
+});
