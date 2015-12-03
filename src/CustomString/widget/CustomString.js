@@ -62,9 +62,7 @@ define([
          // Attach events to HTML dom elements
         _setupEvents: function() {
 
-            this.connect(this.infoTextNode, "click", function(e) {
-                // Only on mobile stop event bubbling!
-                this._stopBubblingEventOnMobile(e);
+            this.connect(this.customString, "click", function(e) {
 
                 // If a microflow has been set execute the microflow on a click.
                 if (this.mfToExecute !== "") {
