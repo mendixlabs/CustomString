@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="CustomStringNoContext.widget.CustomStringNoContext" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/">
+  <name>CustomString (No Context)</name>
+  <description></description>
+
+  <icon>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAnVJREFUOE+tkt1LU3EYxyf2QjeKS8VUpC4WFPRyUzfdFmgimBBhdDMXNq3my3Q60yk2czo9Lac7s9zm3Kab5nxbviu+oR0tdhElQeRFUH/AwJkOvz1bRyOmdNMXPjznd3i+3+c8h5/gvygiIuISlQ0Ch7BBPZepHqoLxDJRQSiJ78QP/lxOrBAXiYNF6VFUrv4+CUTEOvGZOBt8QbpCPdH88z8VCoiMPLIhLnhqUTa7vHJNt6+43uErbezxKpt7GYXWFew5VKJjx098i4qJ9Svq2mF1z8E9tYq+cQ6scwbV+gHI1HauSONM5/v/1rXrmTeihfH++IQkdDgG4Zl7j8Hpd3g9sQbn2FvYhldQ0zaE3Oou7kGNLfxLcgrV5riEZCQlp4C1ujEwvQb/1jZWP3yFdWgZHf1LYF2LkNU7IansYnjbH+XIGz+dSkpBIgXozX00lcPuLrC9E8Dk8jpanfN4bp+DUjeM7FKTl7ft6+gtcfmm8GQcYoSxqHimh8m9gJ1AAEEFQzwLH6ExTaPSMI4sWbuP9+3rfFzi6QDV0AU6IzoHdUt3yLgXMLv2BTXGSSh0HmQ8ZMMCBLI6u7e5c5ImL8HYuwh9zzytsIutnzuhFaposrJlDLm1vRRgDFtBUFDfzSia+mBwLUBHu2o7Z7Hp3w6Zn7SOo+zFKIoZD27LLch49DL8J+bXOkSSKisn1/ajwTID9aspqNgJKPWjKNG9QWGTB9nlXUiTslxanvHgC3VfZUu/V2bmJCo7Hmv6IWdGIGsYhljlRFaRGalSA3cz33jwRdrTXYVFdKfExGTK2r3peQZfqrTNR1O9ZGRSpSw/WSD4BZFEYar4S8lzAAAAAElFTkSuQmCC</icon>
+
+  <properties>
+        <property key="sourceMF" type="microflow" required="false">
+          <caption>Source microflow</caption>
+          <category>Data source</category>
+          <description>Microflow returning a String</description>
+          <returnType type="String"></returnType>
+    </property>
+    <property key="renderHTML" type="boolean" defaultValue="false">
+          <caption>Render value as HTML</caption>
+          <category>Data source</category>
+          <description>Escapes HTML elements when set to false</description>
+    </property>
+    <property key="mfToExecute" type="microflow" required="false">
+          <caption>On click</caption>
+          <category>Behavior</category>
+          <description>The microflow to execute on click.</description>
+          <returnType type="Boolean" />
+    </property>
+	</properties>
+</widget>
+
