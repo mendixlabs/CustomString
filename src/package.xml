@@ -3,9 +3,11 @@
     <clientModule name="CustomString" version="2.0" xmlns="http://www.mendix.com/clientModule/1.0/">
         <widgetFiles>
             <widgetFile path="CustomString/CustomString.xml" />
+            <widgetFile path="CustomStringNoContext/CustomStringNoContext.xml" />
         </widgetFiles>
         <files>
-            <file path="CustomString/widget/" />
+        	<file path="CustomString/widget/" />
+            <file path="CustomStringNoContext/widget/" />
         </files>
     </clientModule>
 </package>
