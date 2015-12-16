@@ -53,9 +53,11 @@ define([
         update: function(obj, callback) {
             this._contextObj = obj;
             
-            this._resetSubscriptions();
-            this._updateRendering();
-
+            if(this._contextObj)
+            {
+                this._resetSubscriptions();
+                this._updateRendering();
+            }
             callback();
         },
         
@@ -93,9 +95,7 @@ define([
 			        guids       : [this._contextObj.getGuid()]
 
 			    },		
-			    callback     : dojoLang.hitch(this,function(returnedString) {
-			        this.customString.innerHTML = this.checkString(returnedString, this.renderHTML);
-			    }),
+			    callback     : dojoLang.hitch(this, this._processSourceMFCallback),
 			    error        : dojoLang.hitch(this, function(error) {
 			        alert(error.description);
 			    }),
@@ -105,10 +105,14 @@ define([
 			});
 		},
 
+        _processSourceMFCallback: function(returnedString) {
+            this.customString.innerHTML = this.checkString(returnedString, this.renderHTML);
+        },
+
         checkString : function (string, htmlBool) {
-        if(string.indexOf("<script") > -1 || !htmlBool)
-            string = mxui.dom.escapeHTML(string);   
-        return string;  
+            if(string.indexOf("<script") > -1 || !htmlBool)
+                string = mxui.dom.escapeHTML(string);   
+            return string;  
     	},
 
         // Reset subscriptions.
