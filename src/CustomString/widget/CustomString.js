@@ -21,8 +21,9 @@ define([
     "dijit/_TemplatedMixin",
     "dojo/_base/array",
     "dojo/_base/lang",
+	"mxui/dom",
     "dojo/text!CustomString/widget/template/CustomString.html"
-], function(declare, _WidgetBase, _TemplatedMixin, dojoArray, dojoLang, widgetTemplate) {
+], function(declare, _WidgetBase, _TemplatedMixin, dojoArray, dojoLang, dom, widgetTemplate) {
     "use strict";
 
     // Declare widget's prototype.
@@ -111,7 +112,7 @@ define([
 
         checkString : function (string, htmlBool) {
             if(string.indexOf("<script") > -1 || !htmlBool)
-                string = mxui.dom.escapeHTML(string);   
+                string = dom.escapeString(string);   
             return string;  
     	},
 
