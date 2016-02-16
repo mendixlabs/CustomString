@@ -1,45 +1,48 @@
 
 // Required module list. Remove unnecessary modules, you can always get them back from the boilerplate.
 require([
-    'dojo/_base/declare', 
-    'dojo/_base/lang',
-    'CustomString/widget/CustomString'
+    "dojo/_base/declare",
+    "dojo/_base/lang",
+    "CustomString/widget/CustomString"
 ], function (declare, dojoLang,_customStringNoContextWidget) {
-   
+
     // Declare widget's prototype.
     return declare("CustomString.widget.CustomStringNoContext", [ _customStringNoContextWidget ], {
 
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
         postCreate: function() {
+            logger.debug(this.id + ".postCreate");
             this._setupEvents();
-            this._render();
         },
 
-        // mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
-        
-         // Attach events to HTML dom elements
+        // Attach events to HTML dom elements
         _setupEvents: function() {
-            if(this.mfToExecute){
-                this.connect(this.customString, "click", this._executeMicroflow)};
+            logger.debug(this.id + "._setupEvents");
+            if (this.mfToExecute) {
+                this.connect(this.customString, "click", this._executeMicroflow);
+            }
         },
-        
-   
-        _render : function () {
-           mx.data.action({
+
+        _render : function (callback) {
+            logger.debug(this.id + "._render");
+            mx.data.action({
                 params       : {
                     actionname : this.sourceMF
-                },      
-                callback     : dojoLang.hitch(this, this._processSourceMFCallback),
+                },
+                callback     : dojoLang.hitch(this, this._processSourceMFCallback, callback),
                 error        : dojoLang.hitch(this, function(error) {
                     alert(error.description);
+                    this._runCallback(callback);
                 }),
                 onValidation : dojoLang.hitch(this, function(validations) {
                     alert("There were " + validations.length + " validation errors");
+                    this._runCallback(callback);
                 })
             });
         },
 
         _executeMicroflow: function () {
+            logger.debug(this.id + "._executeMicroflow");
             if (this.mfToExecute) {
                 mx.data.action({
                     store: {
@@ -48,17 +51,11 @@ require([
                     params: {
                         actionname: this.mfToExecute
                     },
-                    callback: function () {
-                        // ok
-                    },
-                    error: function () {
-                        // error
-                    }
-
+                    callback: function () {},   // ok
+                    error: function () {}       // error
                 });
             }
-        },
-
+        }
 
     });
 });
