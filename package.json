@@ -1,12 +1,11 @@
 {
   "name": "CustomString",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Create a string with a microflow",
   "license": "",
   "author": "",
   "private": true,
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "0.4.5",
     "grunt-contrib-clean": "^0.6.0",
@@ -21,8 +20,8 @@
     "node-mendix-modeler-path": "https://github.com/JelteMX/node-mendix-modeler-path/archive/v1.0.0.tar.gz"
   },
   "repository": {
-      "type":"git",
-      "url":"http://github.com/mendix/CustomString"
+    "type": "git",
+    "url": "http://github.com/mendix/CustomString"
   },
   "engines": {
     "node": ">=0.12.0"

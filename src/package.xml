@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.mendix.com/package/1.0/">
-    <clientModule name="CustomString" version="2.1" xmlns="http://www.mendix.com/clientModule/1.0/">
+    <clientModule name="CustomString" version="2.1.1" xmlns="http://www.mendix.com/clientModule/1.0/">
         <widgetFiles>
-            <widgetFile path="CustomString/CustomString.xml" />
-            <widgetFile path="CustomString/CustomStringNoContext.xml" />
+            <widgetFile path="CustomString/CustomString.xml"/>
+            <widgetFile path="CustomString/CustomStringNoContext.xml"/>
         </widgetFiles>
         <files>
-        	<file path="CustomString/widget/" />
+            <file path="CustomString/widget/"/>
         </files>
     </clientModule>
 </package>
