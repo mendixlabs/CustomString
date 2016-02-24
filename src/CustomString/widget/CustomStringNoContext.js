@@ -32,11 +32,11 @@ require([
                 callback     : dojoLang.hitch(this, this._processSourceMFCallback, callback),
                 error        : dojoLang.hitch(this, function(error) {
                     alert(error.description);
-                    this._runCallback(callback);
+                    mendix.lang.nullExec(callback);
                 }),
                 onValidation : dojoLang.hitch(this, function(validations) {
                     alert("There were " + validations.length + " validation errors");
-                    this._runCallback(callback);
+                    mendix.lang.nullExec(callback);
                 })
             });
         },
