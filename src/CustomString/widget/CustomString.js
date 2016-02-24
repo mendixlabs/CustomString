@@ -21,9 +21,10 @@ define([
     "dijit/_TemplatedMixin",
     "dojo/_base/array",
     "dojo/_base/lang",
+    "dojo/html",
     "mxui/dom",
     "dojo/text!CustomString/widget/template/CustomString.html"
-], function(declare, _WidgetBase, _TemplatedMixin, dojoArray, dojoLang, dom, widgetTemplate) {
+], function(declare, _WidgetBase, _TemplatedMixin, dojoArray, dojoLang, html, dom, widgetTemplate) {
     "use strict";
 
     // Declare widget's prototype.
@@ -102,6 +103,9 @@ define([
                     guids       : [this._contextObj.getGuid()]
 
                 },
+                store: {
+                    caller: this.mxform
+                },
                 callback     : dojoLang.hitch(this, this._processSourceMFCallback, callback),
                 error        : dojoLang.hitch(this, function(error) {
                     alert(error.description);
@@ -117,13 +121,14 @@ define([
 
         _processSourceMFCallback: function (callback, returnedString) {
             logger.debug(this.id + "._processSourceMFCallback");
-            this.customString.innerHTML = this.checkString(returnedString, this.renderHTML);
+            html.set(this.customString, this.checkString(returnedString, this.renderHTML));
             mendix.lang.nullExec(callback);
         },
 
         checkString : function (string, htmlBool) {
             logger.debug(this.id + ".checkString");
             if (string.indexOf("<script") > -1 || !htmlBool) {
+                logger.debug(this.id + ".checkString escape String");
                 string = dom.escapeString(string);
             }
             return string;
