@@ -23,6 +23,11 @@
           <description>The microflow to execute on click.</description>
           <returnType type="Boolean" />
     </property>
+    <property key="refreshTime" type="integer" required="true" defaultValue="0">
+          <caption>Refresh Time</caption>
+          <category>Behavior</category>
+          <description>The microflow will be re-executed and after (x) milliseconds.</description>
+    </property>
 	</properties>
 </widget>
 

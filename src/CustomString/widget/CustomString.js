@@ -35,11 +35,13 @@ define([
         // Parameters configured in the Modeler.
         sourceMF: "",
         renderHTML: "",
+        refreshTime: 0,
 
         // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
         _handles: null,
         _contextObj: null,
         _alertDiv: null,
+        _widgetIsDestroyed: false,
 
         // dojo.declare.constructor is called to construct the widget instance. Implement to initialize non-primitive properties.
         constructor: function() {
@@ -56,15 +58,19 @@ define([
         // mxui.widget._WidgetBase.update is called when context is changed or initialized. Implement to re-render and / or fetch data.
         update: function(obj, callback) {
             logger.debug(this.id + ".update");
-            this._contextObj = obj;
+            // Do not update the widget if it does not exist anymore.
+            if (!this._widgetIsDestroyed){        
+                this._contextObj = obj;
 
-            if (this._contextObj) {
-                this._resetSubscriptions();
-                this._updateRendering(callback);
-            } else if (this._render){
-                this._render(callback);
-            } else {
-                mendix.lang.nullExec(callback);
+                if (this._contextObj) {
+                    this._resetSubscriptions();
+                    this._updateRendering(callback);
+                } else if (this._render){
+                    this._render(callback);
+                } else {
+                    mendix.lang.nullExec(callback);
+                }
+
             }
         },
 
@@ -123,6 +129,10 @@ define([
             logger.debug(this.id + "._processSourceMFCallback");
             html.set(this.customString, this.checkString(returnedString, this.renderHTML));
             mendix.lang.nullExec(callback);
+            
+            if (this.refreshTime !== null && this.refreshTime > 0){
+                setTimeout(dojoLang.hitch(this, this.update, this._contextObj, callback), this.refreshTime);
+            }
         },
 
         checkString : function (string, htmlBool) {
@@ -133,6 +143,21 @@ define([
             }
             return string;
         },
+        
+        uninitialize : function () {
+            logger.debug(this.id + ".uninitialize");
+
+            
+            this._widgetIsDestroyed = true;
+            
+            if (this._handles) {
+                dojoArray.forEach(this._handles, function (handle) {
+                    mx.data.unsubscribe(handle);
+                });
+                this._handles = [];
+            }
+        },
+
 
         // Reset subscriptions.
         _resetSubscriptions: function() {
