@@ -40,7 +40,6 @@ define([
         _alertDiv: null,
 
         constructor: function() {
-            logger.level(logger.DEBUG);
             this._handles = [];
         },
 
