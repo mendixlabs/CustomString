@@ -25,13 +25,7 @@ require([
 
         _render : function (callback) {
             logger.debug(this.id + "._render");
-            mx.data.action({
-                params       : {
-                    actionname : this.sourceMF
-                },
-                store: {
-                    caller: this.mxform
-                },
+            mx.ui.action(this.sourceMF, {
                 callback     : dojoLang.hitch(this, this._processSourceMFCallback, callback),
                 error        : dojoLang.hitch(this, function(error) {
                     alert(error.description);
@@ -41,22 +35,13 @@ require([
                     alert("There were " + validations.length + " validation errors");
                     mendix.lang.nullExec(callback);
                 })
-            });
+            }, this);
         },
 
         _executeMicroflow: function () {
             logger.debug(this.id + "._executeMicroflow");
             if (this.mfToExecute) {
-                mx.data.action({
-                    store: {
-                       caller: this.mxform
-                    },
-                    params: {
-                        actionname: this.mfToExecute
-                    },
-                    callback: function () {},   // ok
-                    error: function () {}       // error
-                });
+                mx.ui.action(this.mfToExecute, {}, this);
             }
         }
 
