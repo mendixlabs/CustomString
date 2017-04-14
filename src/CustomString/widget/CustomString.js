@@ -1,19 +1,3 @@
-/*
-    CustomString
-    ========================
-
-    @file      : CustomString.js
-    @version   : 2.0.0
-    @author    : Roeland Salij
-    @date      : Thursday, December 03, 2015
-    @copyright : Mendix 2015
-    @license   : Apache 2
-
-    Documentation
-    ========================
-    Describe your widget here.
-*/
-
 define([
     "dojo/_base/declare",
     "mxui/widget/_WidgetBase",
@@ -34,7 +18,7 @@ define([
         sourceMF: "",
         renderHTML: "",
 
-        // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
+        // Internal
         _handles: null,
         _contextObj: null,
         _alertDiv: null,
@@ -72,9 +56,7 @@ define([
                             applyto: "selection",
                             guids: [ this._contextObj.getGuid() ]
                         },
-                        callback: function(obj) {
-                            //TODO what to do when all is ok!
-                        },
+                        callback: function(obj) {},
                         error: lang.hitch(this, function(error) {
                             console.log(this.id + ": An error occurred while executing microflow: " + error.description);
                         })
