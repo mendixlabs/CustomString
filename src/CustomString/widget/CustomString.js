@@ -92,6 +92,9 @@ define([
 
         checkString : function (string, htmlBool) {
             logger.debug(this.id + ".checkString");
+            if (!string) {
+                return "";
+            }
             if (string.indexOf("<script") > -1 || !htmlBool) {
                 logger.debug(this.id + ".checkString escape String");
                 string = dom.escapeString(string);
