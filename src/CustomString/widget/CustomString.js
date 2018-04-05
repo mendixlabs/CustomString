@@ -86,7 +86,9 @@ define([
 
         _processSourceMFCallback: function (callback, returnedString) {
             logger.debug(this.id + "._processSourceMFCallback");
-            html.set(this.customString, this.checkString(returnedString, this.renderHTML));
+            if (this.customString) {
+                html.set(this.customString, this.checkString(returnedString, this.renderHTML));
+            }
             this._executeCallback(callback, "_processSourceMFCallback");
         },
 
