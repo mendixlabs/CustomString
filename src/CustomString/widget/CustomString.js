@@ -51,22 +51,31 @@ define([
             this.connect(this.customString, "click", function(e) {
                 // If a microflow has been set execute the microflow on a click.
                 if (this.mfToExecute !== "") {
-                    mx.ui.action(this.mfToExecute, {
+                    var params = {
                         params: {
                             applyto: "selection",
-                            guids: [ this._contextObj.getGuid() ]
+                            guids: []
                         },
-                        callback: function(obj) {},
-                        error: lang.hitch(this, function(error) {
+                        callback: function (obj) {},
+                        error: lang.hitch(this, function (error) {
                             console.log(this.id + ": An error occurred while executing microflow: " + error.description);
                         })
-                    }, this);
+                    };
+                    if (this._contextObj && this._contextObj.getGuid) {
+                        params.params.guids = [this._contextObj.getGuid()];
+                    }
+                    mx.ui.action(this.mfToExecute, params, this);
                 }
             });
         },
 
         _updateRendering : function (callback) {
             logger.debug(this.id + "._updateRendering");
+            if (!this._contextObj) {
+                console.warn(this.id + "._updateRendering not executing action, because context object is missing");
+                this._executeCallback(callback, "._updateRendering error");
+                return;
+            }
             mx.ui.action(this.sourceMF, {
                 params: {
                     applyto     : "selection",
