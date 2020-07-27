@@ -51,37 +51,41 @@ define([
             this.connect(this.customString, "click", function(e) {
                 // If a microflow has been set execute the microflow on a click.
                 if (this.mfToExecute !== "") {
-                    mx.ui.action(this.mfToExecute, {
-                        params: {
-                            applyto: "selection",
-                            guids: [ this._contextObj.getGuid() ]
-                        },
-                        callback: function(obj) {},
-                        error: lang.hitch(this, function(error) {
-                            console.log(this.id + ": An error occurred while executing microflow: " + error.description);
-                        })
-                    }, this);
+                    mx.data.action(
+                        {
+                            params: {
+                                actionname: this.mfToExecute,
+                                applyto: "selection",
+                                guids: [this._contextObj.getGuid()]
+                            },
+                            callback: function(obj) {},
+                            error: lang.hitch(this, function(error) {
+                                console.log(this.id + ": An error occurred while executing microflow: " + error.description);
+                            })
+                        }, this);
                 }
             });
         },
 
         _updateRendering : function (callback) {
             logger.debug(this.id + "._updateRendering");
-            mx.ui.action(this.sourceMF, {
-                params: {
-                    applyto     : "selection",
-                    guids       : [this._contextObj.getGuid()]
-                },
-                callback     : lang.hitch(this, this._processSourceMFCallback, callback),
-                error        : lang.hitch(this, function(error) {
-                    alert(error.description);
-                    this._executeCallback(callback, "_updateRendering error");
-                }),
-                onValidation : lang.hitch(this, function(validations) {
-                    alert("There were " + validations.length + " validation errors");
-                    this._executeCallback(callback, "_updateRendering onValidation");
-                })
-            }, this);
+            mx.data.action(
+                {
+                    params: {
+                        actionname: this.sourceMF,
+                        applyto: "selection",
+                        guids: [this._contextObj.getGuid()],
+                    },
+                    callback: lang.hitch(this, this._processSourceMFCallback, callback),
+                    error: lang.hitch(this, function(error) {
+                        alert(error.description);
+                        this._executeCallback(callback, "_updateRendering error");
+                    }),
+                    onValidation: lang.hitch(this, function(validations) {
+                        alert("There were " + validations.length + " validation errors");
+                        this._executeCallback(callback, "_updateRendering onValidation");
+                    })
+                }, this);
         },
 
         _processSourceMFCallback: function (callback, returnedString) {
